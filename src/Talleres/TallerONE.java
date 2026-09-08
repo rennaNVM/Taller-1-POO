@@ -9,8 +9,12 @@ public class TallerONE {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 	
-		String[][] datosAlumnos;
-		String[][] datosSolicitudes;
+		String[][] datosAlumnos = new String [0][0];
+		String[][] datosSolicitudes = new String [0][0];
+		String[][] alumnoRegistrado = new String [50][4];
+		String[][] alumnoNoPertenece = new String [50][4];
+		int cont = 0 ;
+		int contR = 0 ;
 		int res = 0;
 		
 		do {
@@ -37,7 +41,53 @@ public class TallerONE {
 			}
 			
 			else if (res==2) {
-				filtrado();
+				for (int i = 0; i<50 ; i++ ) {
+					try {
+						if (datosSolicitudes[0][i].equals(null)) {
+						}
+					} catch (Exception e) {
+						break;
+					}
+					
+					int aux = 1;
+					
+					for (int o = 0; o<50; o++) {
+						try {
+							if (datosAlumnos[0][o].equals(null)) {
+							}
+						} catch (Exception e) {
+							break;
+						}
+						
+						boolean mismoNombre = datosSolicitudes[0][i].equals(datosAlumnos[0][o]);
+						boolean mismoApellido = datosSolicitudes[1][i].equals(datosAlumnos[1][o]);
+						
+						if (mismoNombre && mismoApellido) {
+							alumnoRegistrado[cont][0] = datosAlumnos[0][o];
+							alumnoRegistrado[cont][1] = datosAlumnos[1][o];
+							alumnoRegistrado[cont][2] = datosAlumnos[2][o];
+							alumnoRegistrado[cont][3] = datosAlumnos[3][o];
+			                cont++;
+			                aux-=1;
+			                break;
+						}
+					}
+					if (aux==1) {
+					    alumnoNoPertenece[contR][0]=datosSolicitudes[0][i];
+					    alumnoNoPertenece[contR][1]=datosSolicitudes[1][i]; 
+					    contR++;
+					}
+
+				}
+				System.out.println("--- Admitidos ---"); //BORRAR DESPUES
+			    for (int k = 0; k < cont; k++) {
+			        System.out.println(alumnoRegistrado[k][0] + " " + alumnoRegistrado[k][1] + " "
+			                + alumnoRegistrado[k][2] + " " + alumnoRegistrado[k][3]);
+			    }
+			    System.out.println("--- Rechazados ---");
+			    for (int k = 0; k < contR; k++) {
+			        System.out.println(alumnoNoPertenece[k][0] + " " + alumnoNoPertenece[k][1]);
+			    }
 			}
 			
 		} while (res!=7) ;
@@ -78,7 +128,7 @@ public class TallerONE {
 		String[] ruts = new String[50];
 		String[] paralelo = new String[50];
 		
-		while (sFile.hasNextLine()) {
+		while (sFile.hasNextLine() && i<50) {
 			String linea = sFile.nextLine();
 			String[] partes = linea.split(";");
 			nombres[i] = partes[0];
@@ -87,6 +137,10 @@ public class TallerONE {
 			paralelo[i] = partes[3];
 			i++;
 			}
+		if (sFile.hasNextLine()) {
+			System.out.println("Te haz quedado sin espacio!");
+			return new String[][] {nombres, apellidos, ruts, paralelo};
+		}
 		return new String[][] {nombres, apellidos, ruts, paralelo};
 		} 
 	
