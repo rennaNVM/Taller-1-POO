@@ -16,6 +16,7 @@ public class TallerONE {
 		int cont = 0;
 		int contR = 0;
 		int res = 0;
+		int datosAux = 0;
 
 		do {
 			System.out.println("===== Sistema de Control del Grupo POO =====");
@@ -35,84 +36,118 @@ public class TallerONE {
 					datosSolicitudes = cargarSolicitudes();
 					System.out.println("Datos cargados");
 					System.out.println("");
+					datosAux += 1;
 				} catch (Exception e) {
 					System.out.println("El archivo no existe");
 				}
 			}
 
 			else if (res == 2) {
-				for (int i = 0; i < 50; i++) {
-					try {
-						if (datosSolicitudes[0][i].equals(null)) {
-						}
-					} catch (Exception e) {
-						break;
-					}
-
-					int aux = 1;
-
-					for (int o = 0; o < 50; o++) {
+				if (datosAux == 0) {
+					System.out.println("No has cargados los datos de los alumnos!");
+					System.out.println("");
+				} else {
+					for (int i = 0; i < 50; i++) {
 						try {
-							if (datosAlumnos[0][o].equals(null)) {
+							if (datosSolicitudes[0][i].equals(null)) {
 							}
 						} catch (Exception e) {
 							break;
 						}
 
-						boolean mismoNombre = datosSolicitudes[0][i].equals(datosAlumnos[0][o]);
-						boolean mismoApellido = datosSolicitudes[1][i].equals(datosAlumnos[1][o]);
+						int aux = 1;
 
-						if (mismoNombre && mismoApellido) {
-							alumnoRegistrado[cont][0] = datosAlumnos[0][o];
-							alumnoRegistrado[cont][1] = datosAlumnos[1][o];
-							alumnoRegistrado[cont][2] = datosAlumnos[2][o];
-							alumnoRegistrado[cont][3] = datosAlumnos[3][o];
-							cont++;
-							aux -= 1;
-							break;
+						for (int o = 0; o < 50; o++) {
+							try {
+								if (datosAlumnos[0][o].equals(null)) {
+								}
+							} catch (Exception e) {
+								break;
+							}
+
+							boolean mismoNombre = datosSolicitudes[0][i].equals(datosAlumnos[0][o]);
+							boolean mismoApellido = datosSolicitudes[1][i].equals(datosAlumnos[1][o]);
+
+							if (mismoNombre && mismoApellido) {
+								alumnoRegistrado[cont][0] = datosAlumnos[0][o];
+								alumnoRegistrado[cont][1] = datosAlumnos[1][o];
+								alumnoRegistrado[cont][2] = datosAlumnos[2][o];
+								alumnoRegistrado[cont][3] = datosAlumnos[3][o];
+								cont++;
+								aux -= 1;
+								break;
+							}
 						}
-					}
-					if (aux == 1) {
-						alumnoNoPertenece[contR][0] = datosSolicitudes[0][i];
-						alumnoNoPertenece[contR][1] = datosSolicitudes[1][i];
-						contR++;
-					}
+						if (aux == 1) {
+							alumnoNoPertenece[contR][0] = datosSolicitudes[0][i];
+							alumnoNoPertenece[contR][1] = datosSolicitudes[1][i];
+							contR++;
+						}
 
-				}
-				System.out.println("--- Admitidos ---"); // BORRAR DESPUES
-				for (int k = 0; k < cont; k++) {
-					System.out.println(alumnoRegistrado[k][0] + " " + alumnoRegistrado[k][1] + " "
-							+ alumnoRegistrado[k][2] + " " + alumnoRegistrado[k][3]);
-				}
-				System.out.println("--- Rechazados ---");
-				for (int k = 0; k < contR; k++) {
-					System.out.println(alumnoNoPertenece[k][0] + " " + alumnoNoPertenece[k][1]);
+					}
+					System.out.println("--- Admitidos ---"); // BORRAR DESPUES
+					for (int k = 0; k < cont; k++) {
+						System.out.println(alumnoRegistrado[k][0] + " " + alumnoRegistrado[k][1] + " "
+								+ alumnoRegistrado[k][2] + " " + alumnoRegistrado[k][3]);
+					}
+					System.out.println("--- Rechazados ---"); // BORAR DESPUES
+					for (int k = 0; k < contR; k++) {
+						System.out.println(alumnoNoPertenece[k][0] + " " + alumnoNoPertenece[k][1]);
+					}
 				}
 			}
-			
-			else if (res == 3) {
+
+			else if (res == 3) { // EN DESARROLLO
 				System.out.println("Como desea ingresar a la persona?");
 				System.out.println("1) Por nombre completo");
 				System.out.println("2) Por rut");
 				System.out.print(">>");
 				int elec = Integer.parseInt(sc.nextLine());
-				
+
 				if (elec == 1) {
 					System.out.print("Ingrese el nombre completo: ");
 					String nom = sc.nextLine();
-				}
-				else if (elec == 2) {
+				} else if (elec == 2) {
 					System.out.println("Ingrese RUT: ");
 					String rut = sc.nextLine();
-						
-					
+
+				}
+			} else if (res == 4) { //EN DESARROLLO
+				if (datosAux == 0) {
+					System.out.println("No has cargados los datos de los alumnos!");
+					System.out.println("");
+				} else {
+					System.out.printf("%n ==== MENÚ DE ADMINISTRACIÓN ==== %n");
+					System.out.println("1. Cambiar de paralelo a un alumno");
+					System.out.println("2. Eliminar un alumno del curso");
+					System.out.println("3. Inscribir un alumno al curso");
+					System.out.println("4. Salir");
+					res = Integer.parseInt(sc.nextLine());
+					if (res == 1) {
+						System.out.println("=== DATOS DE LOS ALUMNOS ===");
+						for (int i = 0; i < 50; i++) {
+							try {
+								if (datosSolicitudes[0][i].equals(null)) {
+								}
+							} catch (Exception e) {
+								break;
+							}
+							System.out.printf("%s. ", (i + 1));
+							System.out.println(datosAlumnos[0][i] + " " + datosAlumnos[1][i] + " " + datosAlumnos[2][i]
+									+ " " + datosAlumnos[3][i]);
+
+						}
+						System.out.println("¿A quien deseas cambiar de paralelo? [Número]");
+						System.out.println(">> ");
+
+					}
 				}
 			}
+
 		} while (res != 7);
 
 	}
 
-	
 	private static String[][] cargarSolicitudes() throws IOException {
 		File arch = new File("textos/Solicitudes.txt");
 		Scanner sFile = new Scanner(arch);
