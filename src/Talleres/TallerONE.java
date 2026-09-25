@@ -3,7 +3,9 @@
 
 package Talleres;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -117,7 +119,7 @@ public class TallerONE {
 					String rut = sc.nextLine();
 
 				}
-			} else if (res == 4) { // EN DESARROLLO
+			} else if (res == 4) {
 				if (datosAux == 0) {
 					System.out.println("No has cargados los datos de los alumnos!");
 					System.out.println("");
@@ -160,19 +162,69 @@ public class TallerONE {
 									} else {
 										System.out.println("Paralelo no existente");
 										System.out.print("¿A que paralelo deseas cambiar a ");
-										System.out.println(datosAlumnos[i][0] + " " + datosAlumnos[i][1] + "? [C1 o C2]");
+										System.out
+												.println(datosAlumnos[i][0] + " " + datosAlumnos[i][1] + "? [C1 o C2]");
 										System.out.println("0. Salir");
 										System.out.print(">> ");
 										resp = sc.nextLine();
 										partes = resp.split("");
+										if (resp.equals("0"))
+											;
+										{
+											break;
+										}
 									}
-								} while (!(partes[1].equals("1")) || !(partes[1].equals("2")) || resp.equals("0"));
-
+								} while (!(partes[1].equals("1")) && !(partes[1].equals("2")));
+								try {
+									guardarAlumnos(datosAlumnos);
+									System.out.println("Datos guardados correctamente");
+								} catch (IOException e) {
+									System.out.println("No se pudo guardar el archivo");
+								}
+								break;
 							}
 						}
 					}
 					if (res == 2) {
+						System.out.println("=== DATOS DE LOS ALUMNOS ===");
+						for (int i = 0; i < cantidadAlumnos; i++) {
+							System.out.printf("%s. ", (i + 1));
+							System.out.println(datosAlumnos[i][0] + " " + datosAlumnos[i][1] + " " + datosAlumnos[i][2]
+									+ " " + datosAlumnos[i][3]);
 
+						}
+						System.out.println("¿A quien deseas eliminar del paralelo? [Número]");
+						System.out.print(">> ");
+						res = Integer.parseInt(sc.nextLine());
+						datosAlumnos = eliminarAlumno(datosAlumnos, res);
+						try {
+							guardarAlumnos(datosAlumnos);
+						} catch (IOException e) {
+							System.out.println("No se pudo guardar el archivo");
+						}
+					}
+					if (res==3) {
+						System.out.println("Ingrese los datos del alumno en el siguiente formato: ");
+						System.out.println("NOMBRE;APELLIDO;RUT;PARALELO");
+						System.out.println("0. Salir");
+						System.out.print(">> ");
+						resp = sc.nextLine();
+						if (resp.equals("0")) {
+							continue;
+						} else {
+							String[] partes = resp.split(";");
+							datosAlumnos[cantidadAlumnos][0] = partes[0];
+							datosAlumnos[cantidadAlumnos][1] = partes[1];
+							datosAlumnos[cantidadAlumnos][2] = partes[2];
+							datosAlumnos[cantidadAlumnos][3] = partes[3];
+							cantidadAlumnos++;
+							try {
+								guardarAlumnos(datosAlumnos);
+								System.out.println("Datos guardados correctamente");
+							} catch (IOException e) {
+								System.out.println("No se pudo guardar el archivo");
+							}
+						}
 					}
 				}
 			}
@@ -223,4 +275,33 @@ public class TallerONE {
 		return alumnos;
 	}
 
+	public static String[][] eliminarAlumno(String[][] data, int resp) {
+		String[][] nuevaLista = new String[50][4];
+		int index = 0;
+		int aux = cantidadAlumnos;
+		for (int i = 0; i < aux; i++) {
+			if (i==(resp-1)) {
+				cantidadAlumnos-=1;
+			} else {
+				nuevaLista[index][0] = data[i][0];
+				nuevaLista[index][1] = data[i][1];
+				nuevaLista[index][2] = data[i][2];
+				nuevaLista[index][3] = data[i][3];
+				index++;
+			}
+		}
+		return nuevaLista;
+	}
+
+	public static void guardarAlumnos(String[][] data) throws IOException {
+		BufferedWriter bw = new BufferedWriter(new FileWriter("textos/Alumnos.txt"));
+
+		for (int i = 0; i < cantidadAlumnos; i++) {
+			bw.write(data[i][0] + ";" + data[i][1] + ";" + data[i][2] + ";" + data[i][3]);
+			bw.newLine();
+		}
+
+		bw.close();
+	}
+	
 }
