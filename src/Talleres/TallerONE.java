@@ -493,6 +493,7 @@ public class TallerONE{
 		String[][] nuevaLista = new String[100][4];
 		int index = 0;
 		int aux = cantidadAlumnos;
+		String rutEliminado = data[resp - 1][2];
 		for (int i = 0; i < aux; i++) {
 			if (i == (resp - 1)) {
 				cantidadAlumnos -= 1;
@@ -502,6 +503,18 @@ public class TallerONE{
 				nuevaLista[index][2] = data[i][2];
 				nuevaLista[index][3] = data[i][3];
 				index++;
+			}
+			for (int j = 0; j < cont; j++) {
+				if (alumnoRegistrado[j][2].equals(rutEliminado)) {
+					for (int k = j; k < cont - 1; k++) {
+						alumnoRegistrado[k][0] = alumnoRegistrado[k + 1][0];
+						alumnoRegistrado[k][1] = alumnoRegistrado[k + 1][1];
+						alumnoRegistrado[k][2] = alumnoRegistrado[k + 1][2];
+						alumnoRegistrado[k][3] = alumnoRegistrado[k + 1][3];
+					}
+					cont--;
+					break;
+				}
 			}
 		}
 		return nuevaLista;
