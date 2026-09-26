@@ -3,26 +3,30 @@
 
 package Talleres;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 
 public class TallerONE {
 
 	static int cantidadAlumnos = 0;
+	static int cantidadSolicitudes = 0;
+	static int cont = 0;
+	static int contR = 0;
+	static int inscripcionesManuales = 0;
+	static int intentosManuales = 0;
+
+	static String[][] alumnoRegistrado = new String[100][4];
+	static String[][] alumnoNoPertenece = new String[100][3];
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 
 		String[][] datosAlumnos = new String[0][0];
 		String[][] datosSolicitudes = new String[0][0];
-		String[][] alumnoRegistrado = new String[50][4];
-		String[][] alumnoNoPertenece = new String[50][4];
 		String resp;
-		int cont = 0;
-		int contR = 0;
 		int res = 0;
 		int datosAux = 0;
 		int elec = 0;
@@ -61,7 +65,7 @@ public class TallerONE {
 					System.out.println("No has cargados los datos de los alumnos!");
 					System.out.println("");
 				} else {
-					for (int i = 0; i < 50; i++) {
+					for (int i = 0; i < 100; i++) {
 						try {
 							if (datosSolicitudes[i][0].equals(null)) {
 							}
@@ -88,6 +92,7 @@ public class TallerONE {
 						if (aux == 1) {
 							alumnoNoPertenece[contR][0] = datosSolicitudes[i][0];
 							alumnoNoPertenece[contR][1] = datosSolicitudes[i][1];
+							alumnoNoPertenece[contR][2] = "nombre";
 							contR++;
 						}
 
@@ -104,22 +109,133 @@ public class TallerONE {
 				}
 			}
 
-			else if (res == 3) { // EN DESARROLLO
-				System.out.println("Como desea ingresar a la persona?");
-				System.out.println("1) Por nombre completo");
-				System.out.println("2) Por rut");
-				System.out.print(">>");
-				elec = Integer.parseInt(sc.nextLine());
+			else if (res == 3) { // TERMINADO
 
-				if (elec == 1) {
-					System.out.print("Ingrese el nombre completo: ");
-					String nom = sc.nextLine();
-				} else if (elec == 2) {
-					System.out.println("Ingrese RUT: ");
-					String rut = sc.nextLine();
+				if (datosAux == 0) {
+					System.out.println("No has cargado los datos de los alumnos");
+					System.out.println("");
 
+				} else {
+
+					System.out.println("Como desea ingresar a la persona?");
+					System.out.println("1) Por nombre completo");
+					System.out.println("2) Por rut");
+					System.out.print(">>");
+					elec = Integer.parseInt(sc.nextLine());
+
+					if (elec == 1) {
+						intentosManuales++;
+						System.out.print("Ingrese el nombre: ");
+						String nom = sc.nextLine();
+						System.out.println("Ingrese el apellido: ");
+						String ape = sc.nextLine();
+
+						boolean encontrado = false;
+						boolean registradoAntes = false;
+
+						for (int i = 0; i < cantidadAlumnos; i++) {
+
+							if (nom.equalsIgnoreCase(datosAlumnos[i][0]) && ape.equalsIgnoreCase(datosAlumnos[i][1])) {
+
+								encontrado = true;
+
+								for (int j = 0; j < cont; j++) {
+
+									if (datosAlumnos[i][2].equals(alumnoRegistrado[j][2])) {
+										registradoAntes = true;
+									}
+								}
+
+								if (registradoAntes == false) {
+
+									alumnoRegistrado[cont][0] = datosAlumnos[i][0];
+									alumnoRegistrado[cont][1] = datosAlumnos[i][1];
+									alumnoRegistrado[cont][2] = datosAlumnos[i][2];
+									alumnoRegistrado[cont][3] = datosAlumnos[i][3];
+
+									cont++;
+									inscripcionesManuales++;
+
+									System.out.println("Alumno inscrito correctamente.");
+
+								} else {
+
+									System.out.println("El alumno ya pertenece al grupo.");
+								}
+
+								break;
+							}
+						}
+
+						if (encontrado == false) {
+							alumnoNoPertenece[contR][0] = nom;
+							alumnoNoPertenece[contR][1] = ape;
+							alumnoNoPertenece[contR][2] = "nombre";
+
+							contR++;
+							System.out.println("La persona no pertenece a ningun paralelo del curso.");
+						}
+
+					} else if (elec == 2) {
+						intentosManuales++;
+						System.out.println("Ingrese RUT: ");
+						String rut = sc.nextLine();
+
+						boolean encontrado = false;
+						boolean registradoAntes = false;
+
+						for (int i = 0; i < cantidadAlumnos; i++) {
+
+							if (rut.equalsIgnoreCase(datosAlumnos[i][2])) {
+
+								encontrado = true;
+
+								for (int j = 0; j < cont; j++) {
+
+									if (rut.equalsIgnoreCase(alumnoRegistrado[j][2])) {
+										registradoAntes = true;
+
+									}
+								}
+
+								if (registradoAntes == false) {
+
+									alumnoRegistrado[cont][0] = datosAlumnos[i][0];
+									alumnoRegistrado[cont][1] = datosAlumnos[i][1];
+									alumnoRegistrado[cont][2] = datosAlumnos[i][2];
+									alumnoRegistrado[cont][3] = datosAlumnos[i][3];
+
+									cont++;
+									inscripcionesManuales++;
+
+									System.out.println("Alumno inscrito correctamente.");
+
+								} else {
+									System.out.println("El alumno ya pertenece al grupo.");
+
+								}
+
+								break;
+
+							}
+						}
+
+						if (encontrado == false) {
+
+							alumnoNoPertenece[contR][0] = "";
+							alumnoNoPertenece[contR][1] = rut;
+							alumnoNoPertenece[contR][2] = "rut";
+
+							contR++;
+
+							System.out.println("El rut no pertenece a ningun paralelo del curso.");
+							System.out.println("No tenemos su nombre, por lo que se registrara solo el RUT.");
+						}
+					} else {
+						System.out.println("Opcion invalida");
+					}
 				}
-			} else if (res == 4) {
+			} else if (res == 4) { // Terminado
 				if (datosAux == 0) {
 					System.out.println("No has cargados los datos de los alumnos!");
 					System.out.println("");
@@ -168,9 +284,7 @@ public class TallerONE {
 										System.out.print(">> ");
 										resp = sc.nextLine();
 										partes = resp.split("");
-										if (resp.equals("0"))
-											;
-										{
+										if (resp.equals("0")) {
 											break;
 										}
 									}
@@ -203,7 +317,7 @@ public class TallerONE {
 							System.out.println("No se pudo guardar el archivo");
 						}
 					}
-					if (res==3) {
+					if (res == 3) {
 						System.out.println("Ingrese los datos del alumno en el siguiente formato: ");
 						System.out.println("NOMBRE;APELLIDO;RUT;PARALELO");
 						System.out.println("0. Salir");
@@ -227,6 +341,50 @@ public class TallerONE {
 						}
 					}
 				}
+			} else if (res == 5) { // TERMINADA
+
+				if (datosAux == 0) {
+					System.out.println("No has cargado los datos de los alumnos!");
+					System.out.println("");
+
+				} else {
+
+					int opcionReport = 0;
+
+					do {
+						System.out.println("===== GENERAR REPORTES =====");
+						System.out.println("1. Reporte C1");
+						System.out.println("2. Reporte C2");
+						System.out.println("3. Reporte rechazados");
+						System.out.println("4. Salir");
+						System.out.print(">> ");
+						opcionReport = Integer.parseInt(sc.nextLine());
+
+						if (opcionReport == 1) {
+							generarReporteParalelo("C1");
+
+						} else if (opcionReport == 2) {
+							generarReporteParalelo("C2");
+
+						} else if (opcionReport == 3) {
+							generarReporteRechazados();
+
+						} else if (opcionReport != 4) {
+							System.out.println("Opcion invalida");
+						}
+
+					} while (opcionReport != 4);
+
+				}
+			} else if (res == 6) {
+
+				if (datosAux == 0) {
+					System.out.println("No has cargado los datos de los alumnos!");
+					System.out.println("");
+
+				} else {
+					analisisEstadistico();
+				}
 			}
 
 		} while (res != 7);
@@ -238,9 +396,9 @@ public class TallerONE {
 		Scanner sFile = new Scanner(arch);
 
 		int o = 0;
-		String[][] solicitudes = new String[50][2];
+		String[][] solicitudes = new String[100][2];
 
-		while (sFile.hasNextLine() && o < 50) {
+		while (sFile.hasNextLine() && o < 100) {
 			String linea = sFile.nextLine();
 			String[] partes = linea.split("-");
 			solicitudes[o][0] = partes[0];
@@ -248,6 +406,7 @@ public class TallerONE {
 			o++;
 		}
 
+		cantidadSolicitudes = o;
 		return solicitudes;
 	}
 
@@ -256,9 +415,9 @@ public class TallerONE {
 		Scanner sFile = new Scanner(arch);
 
 		int i = 0;
-		String[][] alumnos = new String[50][4];
+		String[][] alumnos = new String[100][4];
 
-		while (sFile.hasNextLine() && i < 50) {
+		while (sFile.hasNextLine() && i < 100) {
 			String linea = sFile.nextLine();
 			String[] partes = linea.split(";");
 			alumnos[i][0] = partes[0];
@@ -276,12 +435,12 @@ public class TallerONE {
 	}
 
 	public static String[][] eliminarAlumno(String[][] data, int resp) {
-		String[][] nuevaLista = new String[50][4];
+		String[][] nuevaLista = new String[100][4];
 		int index = 0;
 		int aux = cantidadAlumnos;
 		for (int i = 0; i < aux; i++) {
-			if (i==(resp-1)) {
-				cantidadAlumnos-=1;
+			if (i == (resp - 1)) {
+				cantidadAlumnos -= 1;
 			} else {
 				nuevaLista[index][0] = data[i][0];
 				nuevaLista[index][1] = data[i][1];
@@ -303,5 +462,130 @@ public class TallerONE {
 
 		bw.close();
 	}
-	
+
+	public static void generarReporteParalelo(String paralelo) {
+
+		File carpeta = new File("Reportes");
+
+		if (carpeta.exists() == false) { // si reportes no existe
+			carpeta.mkdir(); // esto crea la carpeta
+		}
+
+		int version = 1;
+		File archivo = new File("Reportes/Reporte" + paralelo + "-V" + version + ".txt");
+
+		while (archivo.exists()) {
+			version++;
+			archivo = new File("Reportes/Reporte" + paralelo + "-V" + version + ".txt");
+		}
+
+		try {
+			BufferedWriter escritor = new BufferedWriter(new FileWriter(archivo));
+
+			escritor.write("=== Miembros del grupo - Paralelo " + paralelo + " ===");
+			escritor.newLine();
+
+			for (int i = 0; i < cont; i++) {
+				if (alumnoRegistrado[i][3].equals(paralelo)) {
+					escritor.write(
+							alumnoRegistrado[i][0] + " " + alumnoRegistrado[i][1] + " - " + alumnoRegistrado[i][2]);
+					escritor.newLine();
+
+				}
+			}
+
+			escritor.close();
+
+		} catch (IOException e) {
+			System.out.println("No se pudo generar el reporte.");
+		}
+
+	}
+
+	public static void generarReporteRechazados() {
+
+		File carpeta = new File("Reportes");
+
+		if (carpeta.exists() == false) {
+			carpeta.mkdir();
+		}
+
+		int version = 1;
+		File archivo = new File("Reportes/Rechazados-V" + version + ".txt");
+
+		while (archivo.exists()) {
+			version++;
+			archivo = new File("Reportes/Rechazados-V" + version + ".txt");
+		}
+
+		try {
+			BufferedWriter escritor = new BufferedWriter(new FileWriter(archivo));
+
+			escritor.write("=== Solicitudes rechazadas ===");
+			escritor.newLine();
+
+			for (int i = 0; i < contR; i++) {
+				if (alumnoNoPertenece[i][2].equals("nombre")) {
+					escritor.write(alumnoNoPertenece[i][0] + " " + alumnoNoPertenece[i][1]
+							+ " - No pertenece a ningun paralelo del curso");
+
+				} else if (alumnoNoPertenece[i][2].equals("rut")) {
+					escritor.write("Sin nombre registrado, RUT: " + alumnoNoPertenece[i][1]);
+				}
+				escritor.newLine();
+			}
+			escritor.close();
+
+		} catch (IOException e) {
+			System.out.println("No se pudo generar el reporte.");
+		}
+	}
+
+	public static void analisisEstadistico() {
+
+		int cantidadC1 = 0;
+		int cantidadC2 = 0;
+		int rechazadosRut = 0;
+		int admitidosArchivo = cont - inscripcionesManuales;
+
+		for (int i = 0; i < cont; i++) {
+			if (alumnoRegistrado[i][3].equals("C1")) {
+				cantidadC1++;
+			} else if (alumnoRegistrado[i][3].equals("C2")) {
+				cantidadC2++;
+			}
+		}
+
+		for (int i = 0; i < contR; i++) {
+			if (alumnoNoPertenece[i][2].equals("rut")) {
+				rechazadosRut++;
+
+			}
+		}
+
+		int totalIntentos = cantidadSolicitudes + intentosManuales;
+		double porcentajeRechazados = 0;
+		double porcentajeC1 = 0;
+		double porcentajeC2 = 0;
+		double tasaAdmision = 0;
+
+		if (totalIntentos > 0) {
+			porcentajeRechazados = (contR * 100.0) / totalIntentos;
+			tasaAdmision = (cont * 100.0) / totalIntentos;
+		}
+
+		if (cont > 0) {
+			porcentajeC1 = (cantidadC1 * 100.0) / cont;
+			porcentajeC2 = (cantidadC2 * 100.0) / cont;
+		}
+
+		System.out.println("--- Analisis estadisticos ---");
+		System.out.println("Tasa de admision: " + tasaAdmision + "%");
+		System.out.println("Inscripciones -> Archivo: " + admitidosArchivo + " | Manual: " + inscripcionesManuales);
+		System.out.println("Rechazados: " + contR + " (" + porcentajeRechazados + "%)");
+		System.out.println("Admitidos por paralelo -> C1: " + cantidadC1 + "(" + porcentajeC1 + "%) | C2: " + cantidadC2
+				+ "(" + porcentajeC2 + "%)");
+
+	}
+
 }
